@@ -43,7 +43,7 @@ class TileModel {
       } else if (rowPos == 2 || rowPos == 5) {
         chesspiece = WhiteBishop(size: tileSize);
         type = TileType.whiteBishop;
-      } else if (rowPos == 3) {
+      } else if (rowPos == 4) {
         chesspiece = WhiteQueen(size: tileSize);
         type = TileType.whiteQueen;
       } else {

@@ -25,16 +25,33 @@ class _TileViewState extends State<TileView> {
         height: widget.size,
         width: widget.size,
         decoration: BoxDecoration(
-            color: widget.tileModel.isSelected
-                ? HexColor(selectedBorderColor)
-                : HexColor(widget.tileModel.tileColor),
-            border: Border.all(
-                color: widget.tileModel.isAllowedTile
-                    ? Colors.blueAccent
-                    : Colors.transparent,
-                width: 4)),
+          color: widget.tileModel.isSelected
+              ? HexColor(selectedBorderColor)
+              : HexColor(widget.tileModel.tileColor),
+        ),
         alignment: Alignment.center,
-        child: widget.tileModel.chesspiece,
+        child: Stack(
+          children: [
+            Align(
+              alignment: Alignment.center,
+              child: Container(
+                width: widget.size,
+                height: widget.size,
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    width: widget.size / 8,
+                    color: widget.tileModel.isAllowedTile
+                        ? HexColor(allowedTileColor)
+                        : Colors.transparent,
+                  ),
+                  //shape: BoxShape.circle,
+                ),
+                alignment: Alignment.center,
+              ),
+            ),
+            widget.tileModel.chesspiece,
+          ],
+        ),
       ),
     );
   }

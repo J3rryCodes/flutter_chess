@@ -11,19 +11,22 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  static const double border = 0;
+
   @override
   Widget build(BuildContext context) {
     final totalSize = MediaQuery.of(context).size.width;
-    final bordZize = MediaQuery.of(context).size.width - 24;
+    final bordZize = MediaQuery.of(context).size.width - (border * 2);
 
     return Scaffold(
+      backgroundColor: HexColor("#303030"),
       body: SafeArea(
           child: Center(
         child: Container(
             height: totalSize,
             width: totalSize,
             color: HexColor(borderColor),
-            padding: const EdgeInsets.all(12),
+            padding: const EdgeInsets.all(border),
             child: BoardView(boardSize: bordZize)),
       )),
     );

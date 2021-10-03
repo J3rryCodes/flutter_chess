@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_chess/consents/color_constents.dart';
+import 'package:flutter_chess/model/firebase_controller_model.dart';
 import 'package:flutter_chess/model/tile_model.dart';
 import 'package:flutter_chess/viewModel/bord_controller.dart';
 import 'package:hexcolor/hexcolor.dart';
@@ -19,8 +20,20 @@ class _TileViewState extends State<TileView> {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () => Provider.of<BordController>(context, listen: false)
-          .selectTile(widget.tileModel),
+      onTap: () {
+        debugPrint(
+            "${Provider.of<BordController>(context, listen: false).currentPlayer == Provider.of<BordController>(context, listen: false).playerType}");
+        if (Provider.of<BordController>(context, listen: false).currentPlayer ==
+            Provider.of<BordController>(context, listen: false).playerType) {
+          FirebaseControllerModel().selectPiese(
+              widget.tileModel.columnPos,
+              widget.tileModel.rowPos,
+              Provider.of<BordController>(context, listen: false)
+                  .currentPlayer);
+        }
+        // Provider.of<BordController>(context, listen: false)
+        //     .selectTile(widget.tileModel.columnPos, widget.tileModel.rowPos);
+      },
       child: Container(
         height: widget.size,
         width: widget.size,

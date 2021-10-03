@@ -1,6 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_chess/consents/color_constents.dart';
+import 'package:flutter_chess/model/firebase_controller_model.dart';
 import 'package:flutter_chess/model/tile_model.dart';
+
+enum PlayerType { white, black }
 
 class BordController with ChangeNotifier {
   static const int bordSize = 8;
@@ -9,7 +12,13 @@ class BordController with ChangeNotifier {
   TileModel? _selectedModel;
   late TileModel blackKing, whiteKing;
 
-  bool _isWhiteMove = true;
+  late PlayerType currentPlayer;
+
+  late PlayerType playerType;
+
+  setPlayerType(PlayerType playerType) {
+    this.playerType = playerType;
+  }
 
 // PUBLIC FUNCTIONS
   initBord(double tileSize) {
@@ -25,7 +34,18 @@ class BordController with ChangeNotifier {
     whiteKing = tiles[7][3];
   }
 
-  selectTile(TileModel model) {
+  listenPlayerMoves() {
+    FirebaseControllerModel().getLastMove()!.listen((event) {
+      Map<dynamic, dynamic> data =
+          event.snapshot.value as Map<dynamic, dynamic>;
+      currentPlayer =
+          data["player_type"] == 0 ? PlayerType.white : PlayerType.black;
+      _selectTile(data["x"], data["y"]);
+    });
+  }
+
+  _selectTile(int x, int y) {
+    TileModel model = tiles[x][y];
     // pressing twise
     if (tiles[model.columnPos][model.rowPos].isSelected) {
       tiles[model.columnPos][model.rowPos].isSelected = false;
@@ -39,13 +59,23 @@ class BordController with ChangeNotifier {
             .copy(_selectedModel!.type, _selectedModel!.chesspiece);
         tiles[_selectedModel!.columnPos][_selectedModel!.rowPos]
             .copy(TileType.empty, const SizedBox());
+
+        if (tiles[model.columnPos][model.rowPos].type == TileType.blackKing) {
+          blackKing = tiles[model.columnPos][model.rowPos];
+        } else if (tiles[model.columnPos][model.rowPos].type ==
+            TileType.whiteKing) {
+          whiteKing = tiles[model.columnPos][model.rowPos];
+        }
         _selectedModel = null;
-        _isWhiteMove = !_isWhiteMove;
+
+        currentPlayer = currentPlayer == PlayerType.black
+            ? PlayerType.white
+            : PlayerType.black;
       }
       _clear();
       tiles[model.columnPos][model.rowPos].isSelected = true;
       if (_selectedModel != null) {
-        _isWhiteMove
+        currentPlayer == PlayerType.white
             ? _findPossibleWhiteMoves(model)
             : _findPossibleBlackMoves(model);
       }

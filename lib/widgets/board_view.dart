@@ -17,16 +17,23 @@ class _BoardViewState extends State<BoardView> {
   void initState() {
     Provider.of<BordController>(context, listen: false)
         .initBord(widget.boardSize / 8);
+    Provider.of<BordController>(context, listen: false).listenPlayerMoves();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: Provider.of<BordController>(context)
-          .tiles
-          .map<Widget>((e) => _rows(e))
-          .toList(),
+    return Center(
+      child: SizedBox(
+        width: widget.boardSize,
+        height: widget.boardSize,
+        child: Column(
+          children: Provider.of<BordController>(context)
+              .tiles
+              .map<Widget>((e) => _rows(e))
+              .toList(),
+        ),
+      ),
     );
   }
 

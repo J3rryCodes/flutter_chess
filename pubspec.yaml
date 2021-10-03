@@ -37,6 +37,9 @@ dependencies:
   hexcolor: ^2.0.5
   provider: ^6.0.1
   chess_vectors_flutter: ^1.0.16
+  page_transition: ^2.0.4
+  firebase_core: ^1.7.0
+  firebase_database: ^8.0.0
 
 dev_dependencies:
   flutter_test:

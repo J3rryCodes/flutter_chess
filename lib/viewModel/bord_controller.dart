@@ -96,244 +96,27 @@ class BordController with ChangeNotifier {
   void _findPossibleWhiteMoves(TileModel model) {
     // WHITE PAWN
     if (model.type == TileType.whitePawn) {
-      if (model.columnPos == 6 &&
-          tiles[model.columnPos - 1][model.rowPos].type == TileType.empty) {
-        tiles[model.columnPos - 1][model.rowPos].isAllowedTile = true;
-        if (tiles[model.columnPos - 2][model.rowPos].type == TileType.empty) {
-          tiles[model.columnPos - 2][model.rowPos].isAllowedTile = true;
-        }
-        if (model.rowPos != 7 &&
-            tiles[model.columnPos - 1][model.rowPos + 1].type.index >= 7 &&
-            tiles[model.columnPos - 1][model.rowPos + 1].type !=
-                TileType.empty) {
-          tiles[model.columnPos - 1][model.rowPos + 1].isAllowedTile = true;
-        }
-        if (model.rowPos != 0 &&
-            tiles[model.columnPos - 1][model.rowPos - 1].type.index >= 7 &&
-            tiles[model.columnPos - 1][model.rowPos - 1].type !=
-                TileType.empty) {
-          tiles[model.columnPos - 1][model.rowPos - 1].isAllowedTile = true;
-        }
-      } else if (model.columnPos != 0) {
-        if (tiles[model.columnPos - 1][model.rowPos].type == TileType.empty) {
-          tiles[model.columnPos - 1][model.rowPos].isAllowedTile = true;
-        }
-        if (model.rowPos != 7 &&
-            tiles[model.columnPos - 1][model.rowPos + 1].type.index >= 7 &&
-            tiles[model.columnPos - 1][model.rowPos + 1].type !=
-                TileType.empty) {
-          tiles[model.columnPos - 1][model.rowPos + 1].isAllowedTile = true;
-        }
-        if (model.rowPos != 0 &&
-            tiles[model.columnPos - 1][model.rowPos - 1].type.index >= 7 &&
-            tiles[model.columnPos - 1][model.rowPos - 1].type !=
-                TileType.empty) {
-          tiles[model.columnPos - 1][model.rowPos - 1].isAllowedTile = true;
-        }
-      }
+      _whitePwanAllowedLocatons(model);
     }
 
     // White ROOK
     else if (model.type == TileType.whiteRook) {
-      for (int i = model.rowPos + 1; i < 8; i++) {
-        if (tiles[model.columnPos][i].type.index >= 7 ||
-            tiles[model.columnPos][i].type == TileType.empty) {
-          if (i != model.rowPos) tiles[model.columnPos][i].isAllowedTile = true;
-        }
-        if (tiles[model.columnPos][i].type != TileType.empty) {
-          break;
-        }
-      }
-      for (int i = model.columnPos + 1; i < 8; i++) {
-        if (tiles[i][model.rowPos].type.index >= 7 ||
-            tiles[i][model.rowPos].type == TileType.empty) {
-          if (i != model.columnPos) tiles[i][model.rowPos].isAllowedTile = true;
-        }
-        if (tiles[i][model.rowPos].type != TileType.empty) {
-          break;
-        }
-      }
-      for (int i = model.rowPos - 1; i >= 0; i--) {
-        if (tiles[model.columnPos][i].type.index >= 7 ||
-            tiles[model.columnPos][i].type == TileType.empty) {
-          if (i != model.rowPos) tiles[model.columnPos][i].isAllowedTile = true;
-        }
-        if (tiles[model.columnPos][i].type != TileType.empty) {
-          break;
-        }
-      }
-      for (int i = model.columnPos - 1; i >= 0; i--) {
-        if (tiles[i][model.rowPos].type.index >= 7 ||
-            tiles[i][model.rowPos].type == TileType.empty) {
-          if (i != model.columnPos) tiles[i][model.rowPos].isAllowedTile = true;
-        }
-        if (tiles[i][model.rowPos].type != TileType.empty) {
-          break;
-        }
-      }
+      _whiteRookAllowedLocations(model);
     }
 
     // WHITE KNIGHT
     else if (model.type == TileType.whiteKnight) {
-      List<List<int>> rules = [
-        [2, 1],
-        [2, -1],
-        [-2, 1],
-        [-2, -1],
-        [1, 2],
-        [1, -2],
-        [-1, 2],
-        [-1, -2]
-      ];
-      for (List<int> rule in rules) {
-        if (model.columnPos + rule[0] < 8 &&
-            model.columnPos + rule[0] >= 0 &&
-            model.rowPos + rule[1] < 8 &&
-            model.rowPos + rule[1] >= 0 &&
-            (tiles[model.columnPos + rule[0]][model.rowPos + rule[1]]
-                        .type
-                        .index >=
-                    7 ||
-                tiles[model.columnPos + rule[0]][model.rowPos + rule[1]].type ==
-                    TileType.empty)) {
-          tiles[model.columnPos + rule[0]][model.rowPos + rule[1]]
-              .isAllowedTile = true;
-        }
-      }
+      _whiteKnightAllowedLocation(model);
     }
 
     //WHITE BISHOP
     else if (model.type == TileType.whiteBishop) {
-      int c = model.columnPos + 1;
-      int r = model.rowPos + 1;
-      // + +
-      while (c < 8 &&
-          r < 8 &&
-          (tiles[c][r].type.index >= 7 || tiles[c][r].type == TileType.empty)) {
-        tiles[c][r].isAllowedTile = true;
-        if (tiles[c][r].type != TileType.empty) break;
-        c++;
-        r++;
-      }
-      // + -
-      c = model.columnPos + 1;
-      r = model.rowPos - 1;
-      while (c < 8 &&
-          r >= 0 &&
-          (tiles[c][r].type.index >= 7 || tiles[c][r].type == TileType.empty)) {
-        tiles[c][r].isAllowedTile = true;
-        if (tiles[c][r].type != TileType.empty) break;
-        c++;
-        r--;
-      }
-      // - +
-      c = model.columnPos - 1;
-      r = model.rowPos + 1;
-      while (c >= 0 &&
-          r < 8 &&
-          (tiles[c][r].type.index >= 7 || tiles[c][r].type == TileType.empty)) {
-        tiles[c][r].isAllowedTile = true;
-        if (tiles[c][r].type != TileType.empty) break;
-        c--;
-        r++;
-      }
-      // - -
-      c = model.columnPos - 1;
-      r = model.rowPos - 1;
-      while (c >= 0 &&
-          r >= 0 &&
-          (tiles[c][r].type.index >= 7 || tiles[c][r].type == TileType.empty)) {
-        tiles[c][r].isAllowedTile = true;
-        if (tiles[c][r].type != TileType.empty) break;
-        c--;
-        r--;
-      }
+      _whiteBishopAllowedLocation(model);
     }
 
     //WHITE QUEEN
     else if (model.type == TileType.whiteQueen) {
-      //bishop part
-      int c = model.columnPos + 1;
-      int r = model.rowPos + 1;
-      // + +
-      while (c < 8 &&
-          r < 8 &&
-          (tiles[c][r].type.index >= 7 || tiles[c][r].type == TileType.empty)) {
-        tiles[c][r].isAllowedTile = true;
-        if (tiles[c][r].type != TileType.empty) break;
-        c++;
-        r++;
-      }
-      // + -
-      c = model.columnPos + 1;
-      r = model.rowPos - 1;
-      while (c < 8 &&
-          r >= 0 &&
-          (tiles[c][r].type.index >= 7 || tiles[c][r].type == TileType.empty)) {
-        tiles[c][r].isAllowedTile = true;
-        if (tiles[c][r].type != TileType.empty) break;
-        c++;
-        r--;
-      }
-      // - +
-      c = model.columnPos - 1;
-      r = model.rowPos + 1;
-      while (c >= 0 &&
-          r < 8 &&
-          (tiles[c][r].type.index >= 7 || tiles[c][r].type == TileType.empty)) {
-        tiles[c][r].isAllowedTile = true;
-        if (tiles[c][r].type != TileType.empty) break;
-        c--;
-        r++;
-      }
-      // - -
-      c = model.columnPos - 1;
-      r = model.rowPos - 1;
-      while (c >= 0 &&
-          r >= 0 &&
-          (tiles[c][r].type.index >= 7 || tiles[c][r].type == TileType.empty)) {
-        tiles[c][r].isAllowedTile = true;
-        if (tiles[c][r].type != TileType.empty) break;
-        c--;
-        r--;
-      }
-      // rook part
-      for (int i = model.rowPos + 1; i < 8; i++) {
-        if (tiles[model.columnPos][i].type.index >= 7 ||
-            tiles[model.columnPos][i].type == TileType.empty) {
-          if (i != model.rowPos) tiles[model.columnPos][i].isAllowedTile = true;
-        }
-        if (tiles[model.columnPos][i].type != TileType.empty) {
-          break;
-        }
-      }
-      for (int i = model.columnPos + 1; i < 8; i++) {
-        if (tiles[i][model.rowPos].type.index >= 7 ||
-            tiles[i][model.rowPos].type == TileType.empty) {
-          if (i != model.columnPos) tiles[i][model.rowPos].isAllowedTile = true;
-        }
-        if (tiles[i][model.rowPos].type != TileType.empty) {
-          break;
-        }
-      }
-      for (int i = model.rowPos - 1; i >= 0; i--) {
-        if (tiles[model.columnPos][i].type.index >= 7 ||
-            tiles[model.columnPos][i].type == TileType.empty) {
-          if (i != model.rowPos) tiles[model.columnPos][i].isAllowedTile = true;
-        }
-        if (tiles[model.columnPos][i].type != TileType.empty) {
-          break;
-        }
-      }
-      for (int i = model.columnPos - 1; i >= 0; i--) {
-        if (tiles[i][model.rowPos].type.index >= 7 ||
-            tiles[i][model.rowPos].type == TileType.empty) {
-          if (i != model.columnPos) tiles[i][model.rowPos].isAllowedTile = true;
-        }
-        if (tiles[i][model.rowPos].type != TileType.empty) {
-          break;
-        }
-      }
+      _whiteQueenAllowedLocation(model);
     }
 
     // WHITE KING
@@ -379,220 +162,27 @@ class BordController with ChangeNotifier {
   void _findPossibleBlackMoves(TileModel model) {
     // BLACK PAWN
     if (model.type == TileType.blackPawn) {
-      if (model.columnPos == 1 &&
-          tiles[model.columnPos + 1][model.rowPos].type == TileType.empty) {
-        tiles[model.columnPos + 1][model.rowPos].isAllowedTile = true;
-        if (tiles[model.columnPos + 2][model.rowPos].type == TileType.empty) {
-          tiles[model.columnPos + 2][model.rowPos].isAllowedTile = true;
-        }
-        if (model.rowPos != 7 &&
-            tiles[model.columnPos + 1][model.rowPos + 1].type.index < 7 &&
-            tiles[model.columnPos + 1][model.rowPos + 1].type !=
-                TileType.empty) {
-          tiles[model.columnPos + 1][model.rowPos + 1].isAllowedTile = true;
-        }
-        if (model.rowPos != 0 &&
-            tiles[model.columnPos + 1][model.rowPos - 1].type.index < 7 &&
-            tiles[model.columnPos + 1][model.rowPos - 1].type !=
-                TileType.empty) {
-          tiles[model.columnPos + 1][model.rowPos - 1].isAllowedTile = true;
-        }
-      }
-      if (model.columnPos != 7) {
-        if (tiles[model.columnPos + 1][model.rowPos].type == TileType.empty) {
-          tiles[model.columnPos + 1][model.rowPos].isAllowedTile = true;
-        }
-        if (model.rowPos != 7 &&
-            tiles[model.columnPos + 1][model.rowPos + 1].type.index < 7 &&
-            tiles[model.columnPos + 1][model.rowPos + 1].type !=
-                TileType.empty) {
-          tiles[model.columnPos + 1][model.rowPos + 1].isAllowedTile = true;
-        }
-        if (model.rowPos != 0 &&
-            tiles[model.columnPos + 1][model.rowPos - 1].type.index < 7 &&
-            tiles[model.columnPos + 1][model.rowPos - 1].type !=
-                TileType.empty) {
-          tiles[model.columnPos + 1][model.rowPos - 1].isAllowedTile = true;
-        }
-      }
+      _blackPwanAllowedLocatons(model);
     }
 
     // BLACK ROOK
     else if (model.type == TileType.blackRook) {
-      for (int i = model.rowPos + 1; i < 8; i++) {
-        if (tiles[model.columnPos][i].type.index < 7) {
-          if (i != model.rowPos) tiles[model.columnPos][i].isAllowedTile = true;
-        }
-        if (tiles[model.columnPos][i].type != TileType.empty) {
-          break;
-        }
-      }
-      for (int i = model.columnPos + 1; i < 8; i++) {
-        if (tiles[i][model.rowPos].type.index < 7) {
-          if (i != model.columnPos) tiles[i][model.rowPos].isAllowedTile = true;
-        }
-        if (tiles[i][model.rowPos].type != TileType.empty) {
-          break;
-        }
-      }
-      for (int i = model.rowPos - 1; i >= 0; i--) {
-        if (tiles[model.columnPos][i].type.index < 7) {
-          if (i != model.rowPos) tiles[model.columnPos][i].isAllowedTile = true;
-        }
-        if (tiles[model.columnPos][i].type != TileType.empty) {
-          break;
-        }
-      }
-      for (int i = model.columnPos - 1; i >= 0; i--) {
-        if (tiles[i][model.rowPos].type.index < 7) {
-          if (i != model.columnPos) tiles[i][model.rowPos].isAllowedTile = true;
-        }
-        if (tiles[i][model.rowPos].type != TileType.empty) {
-          break;
-        }
-      }
+      _blackRookAllowedLocatons(model);
     }
 
     // BLACK KNIGHT
     else if (model.type == TileType.blackKnight) {
-      List<List<int>> rules = [
-        [2, 1],
-        [2, -1],
-        [-2, 1],
-        [-2, -1],
-        [1, 2],
-        [1, -2],
-        [-1, 2],
-        [-1, -2]
-      ];
-      for (List<int> rule in rules) {
-        if (model.columnPos + rule[0] < 8 &&
-            model.columnPos + rule[0] >= 0 &&
-            model.rowPos + rule[1] < 8 &&
-            model.rowPos + rule[1] >= 0 &&
-            tiles[model.columnPos + rule[0]][model.rowPos + rule[1]]
-                    .type
-                    .index <
-                7) {
-          tiles[model.columnPos + rule[0]][model.rowPos + rule[1]]
-              .isAllowedTile = true;
-        }
-      }
+      _blackKnightAllowedLocatons(model);
     }
 
     //BLACK BISHOP
     else if (model.type == TileType.blackBishop) {
-      int c = model.columnPos + 1;
-      int r = model.rowPos + 1;
-      // + +
-      while (c < 8 && r < 8 && tiles[c][r].type.index < 7) {
-        tiles[c][r].isAllowedTile = true;
-        if (tiles[c][r].type != TileType.empty) break;
-        c++;
-        r++;
-      }
-      // + -
-      c = model.columnPos + 1;
-      r = model.rowPos - 1;
-      while (c < 8 && r >= 0 && tiles[c][r].type.index < 7) {
-        tiles[c][r].isAllowedTile = true;
-        if (tiles[c][r].type != TileType.empty) break;
-        c++;
-        r--;
-      }
-      // - +
-      c = model.columnPos - 1;
-      r = model.rowPos + 1;
-      while (c >= 0 && r < 8 && tiles[c][r].type.index < 7) {
-        tiles[c][r].isAllowedTile = true;
-        if (tiles[c][r].type != TileType.empty) break;
-        c--;
-        r++;
-      }
-      // - -
-      c = model.columnPos - 1;
-      r = model.rowPos - 1;
-      while (c >= 0 && r >= 0 && tiles[c][r].type.index < 7) {
-        tiles[c][r].isAllowedTile = true;
-        if (tiles[c][r].type != TileType.empty) break;
-        c--;
-        r--;
-      }
+      _blackBishopAllowedLocatons(model);
     }
 
     //BLACK QUEEN
     else if (model.type == TileType.blackQueen) {
-      // bishop part
-      int c = model.columnPos + 1;
-      int r = model.rowPos + 1;
-      // + +
-      while (c < 8 && r < 8 && tiles[c][r].type.index < 7) {
-        tiles[c][r].isAllowedTile = true;
-        if (tiles[c][r].type != TileType.empty) break;
-        c++;
-        r++;
-      }
-      // + -
-      c = model.columnPos + 1;
-      r = model.rowPos - 1;
-      while (c < 8 && r >= 0 && tiles[c][r].type.index < 7) {
-        tiles[c][r].isAllowedTile = true;
-        if (tiles[c][r].type != TileType.empty) break;
-        c++;
-        r--;
-      }
-      // - +
-      c = model.columnPos - 1;
-      r = model.rowPos + 1;
-      while (c >= 0 && r < 8 && tiles[c][r].type.index < 7) {
-        tiles[c][r].isAllowedTile = true;
-        if (tiles[c][r].type != TileType.empty) break;
-        c--;
-        r++;
-      }
-      // - -
-      c = model.columnPos - 1;
-      r = model.rowPos - 1;
-      while (c >= 0 && r >= 0 && tiles[c][r].type.index < 7) {
-        tiles[c][r].isAllowedTile = true;
-        if (tiles[c][r].type != TileType.empty) break;
-        c--;
-        r--;
-      }
-
-      //rook part
-      for (int i = model.rowPos + 1; i < 8; i++) {
-        if (tiles[model.columnPos][i].type.index < 7) {
-          if (i != model.rowPos) tiles[model.columnPos][i].isAllowedTile = true;
-        }
-        if (tiles[model.columnPos][i].type != TileType.empty) {
-          break;
-        }
-      }
-      for (int i = model.columnPos + 1; i < 8; i++) {
-        if (tiles[i][model.rowPos].type.index < 7) {
-          if (i != model.columnPos) tiles[i][model.rowPos].isAllowedTile = true;
-        }
-        if (tiles[i][model.rowPos].type != TileType.empty) {
-          break;
-        }
-      }
-      for (int i = model.rowPos - 1; i >= 0; i--) {
-        if (tiles[model.columnPos][i].type.index < 7) {
-          if (i != model.rowPos) tiles[model.columnPos][i].isAllowedTile = true;
-        }
-        if (tiles[model.columnPos][i].type != TileType.empty) {
-          break;
-        }
-      }
-      for (int i = model.columnPos - 1; i >= 0; i--) {
-        if (tiles[i][model.rowPos].type.index < 7) {
-          if (i != model.columnPos) tiles[i][model.rowPos].isAllowedTile = true;
-        }
-        if (tiles[i][model.rowPos].type != TileType.empty) {
-          break;
-        }
-      }
+      _blackQueenAllowedLocatons(model);
     }
 
     //BLACK KING
@@ -629,6 +219,447 @@ class BordController with ChangeNotifier {
           tiles[whiteKing.columnPos + rule[0]][whiteKing.rowPos + rule[1]]
               .isAllowedTile = false;
         }
+      }
+    }
+  }
+
+// Allocated Path Finder Functions
+  void _whitePwanAllowedLocatons(TileModel model) {
+    if (model.columnPos == 6 &&
+        tiles[model.columnPos - 1][model.rowPos].type == TileType.empty) {
+      tiles[model.columnPos - 1][model.rowPos].isAllowedTile = true;
+      if (tiles[model.columnPos - 2][model.rowPos].type == TileType.empty) {
+        tiles[model.columnPos - 2][model.rowPos].isAllowedTile = true;
+      }
+      if (model.rowPos != 7 &&
+          tiles[model.columnPos - 1][model.rowPos + 1].type.index >= 7 &&
+          tiles[model.columnPos - 1][model.rowPos + 1].type != TileType.empty) {
+        tiles[model.columnPos - 1][model.rowPos + 1].isAllowedTile = true;
+      }
+      if (model.rowPos != 0 &&
+          tiles[model.columnPos - 1][model.rowPos - 1].type.index >= 7 &&
+          tiles[model.columnPos - 1][model.rowPos - 1].type != TileType.empty) {
+        tiles[model.columnPos - 1][model.rowPos - 1].isAllowedTile = true;
+      }
+    } else if (model.columnPos != 0) {
+      if (tiles[model.columnPos - 1][model.rowPos].type == TileType.empty) {
+        tiles[model.columnPos - 1][model.rowPos].isAllowedTile = true;
+      }
+      if (model.rowPos != 7 &&
+          tiles[model.columnPos - 1][model.rowPos + 1].type.index >= 7 &&
+          tiles[model.columnPos - 1][model.rowPos + 1].type != TileType.empty) {
+        tiles[model.columnPos - 1][model.rowPos + 1].isAllowedTile = true;
+      }
+      if (model.rowPos != 0 &&
+          tiles[model.columnPos - 1][model.rowPos - 1].type.index >= 7 &&
+          tiles[model.columnPos - 1][model.rowPos - 1].type != TileType.empty) {
+        tiles[model.columnPos - 1][model.rowPos - 1].isAllowedTile = true;
+      }
+    }
+  }
+
+  void _whiteRookAllowedLocations(TileModel model) {
+    for (int i = model.rowPos + 1; i < 8; i++) {
+      if (tiles[model.columnPos][i].type.index >= 7 ||
+          tiles[model.columnPos][i].type == TileType.empty) {
+        if (i != model.rowPos) tiles[model.columnPos][i].isAllowedTile = true;
+      }
+      if (tiles[model.columnPos][i].type != TileType.empty) {
+        break;
+      }
+    }
+    for (int i = model.columnPos + 1; i < 8; i++) {
+      if (tiles[i][model.rowPos].type.index >= 7 ||
+          tiles[i][model.rowPos].type == TileType.empty) {
+        if (i != model.columnPos) tiles[i][model.rowPos].isAllowedTile = true;
+      }
+      if (tiles[i][model.rowPos].type != TileType.empty) {
+        break;
+      }
+    }
+    for (int i = model.rowPos - 1; i >= 0; i--) {
+      if (tiles[model.columnPos][i].type.index >= 7 ||
+          tiles[model.columnPos][i].type == TileType.empty) {
+        if (i != model.rowPos) tiles[model.columnPos][i].isAllowedTile = true;
+      }
+      if (tiles[model.columnPos][i].type != TileType.empty) {
+        break;
+      }
+    }
+    for (int i = model.columnPos - 1; i >= 0; i--) {
+      if (tiles[i][model.rowPos].type.index >= 7 ||
+          tiles[i][model.rowPos].type == TileType.empty) {
+        if (i != model.columnPos) tiles[i][model.rowPos].isAllowedTile = true;
+      }
+      if (tiles[i][model.rowPos].type != TileType.empty) {
+        break;
+      }
+    }
+  }
+
+  void _whiteKnightAllowedLocation(TileModel model) {
+    List<List<int>> rules = [
+      [2, 1],
+      [2, -1],
+      [-2, 1],
+      [-2, -1],
+      [1, 2],
+      [1, -2],
+      [-1, 2],
+      [-1, -2]
+    ];
+    for (List<int> rule in rules) {
+      if (model.columnPos + rule[0] < 8 &&
+          model.columnPos + rule[0] >= 0 &&
+          model.rowPos + rule[1] < 8 &&
+          model.rowPos + rule[1] >= 0 &&
+          (tiles[model.columnPos + rule[0]][model.rowPos + rule[1]]
+                      .type
+                      .index >=
+                  7 ||
+              tiles[model.columnPos + rule[0]][model.rowPos + rule[1]].type ==
+                  TileType.empty)) {
+        tiles[model.columnPos + rule[0]][model.rowPos + rule[1]].isAllowedTile =
+            true;
+      }
+    }
+  }
+
+  void _whiteBishopAllowedLocation(TileModel model) {
+    int c = model.columnPos + 1;
+    int r = model.rowPos + 1;
+    // + +
+    while (c < 8 &&
+        r < 8 &&
+        (tiles[c][r].type.index >= 7 || tiles[c][r].type == TileType.empty)) {
+      tiles[c][r].isAllowedTile = true;
+      if (tiles[c][r].type != TileType.empty) break;
+      c++;
+      r++;
+    }
+    // + -
+    c = model.columnPos + 1;
+    r = model.rowPos - 1;
+    while (c < 8 &&
+        r >= 0 &&
+        (tiles[c][r].type.index >= 7 || tiles[c][r].type == TileType.empty)) {
+      tiles[c][r].isAllowedTile = true;
+      if (tiles[c][r].type != TileType.empty) break;
+      c++;
+      r--;
+    }
+    // - +
+    c = model.columnPos - 1;
+    r = model.rowPos + 1;
+    while (c >= 0 &&
+        r < 8 &&
+        (tiles[c][r].type.index >= 7 || tiles[c][r].type == TileType.empty)) {
+      tiles[c][r].isAllowedTile = true;
+      if (tiles[c][r].type != TileType.empty) break;
+      c--;
+      r++;
+    }
+    // - -
+    c = model.columnPos - 1;
+    r = model.rowPos - 1;
+    while (c >= 0 &&
+        r >= 0 &&
+        (tiles[c][r].type.index >= 7 || tiles[c][r].type == TileType.empty)) {
+      tiles[c][r].isAllowedTile = true;
+      if (tiles[c][r].type != TileType.empty) break;
+      c--;
+      r--;
+    }
+  }
+
+  void _whiteQueenAllowedLocation(TileModel model) {
+    //bishop part
+    int c = model.columnPos + 1;
+    int r = model.rowPos + 1;
+    // + +
+    while (c < 8 &&
+        r < 8 &&
+        (tiles[c][r].type.index >= 7 || tiles[c][r].type == TileType.empty)) {
+      tiles[c][r].isAllowedTile = true;
+      if (tiles[c][r].type != TileType.empty) break;
+      c++;
+      r++;
+    }
+    // + -
+    c = model.columnPos + 1;
+    r = model.rowPos - 1;
+    while (c < 8 &&
+        r >= 0 &&
+        (tiles[c][r].type.index >= 7 || tiles[c][r].type == TileType.empty)) {
+      tiles[c][r].isAllowedTile = true;
+      if (tiles[c][r].type != TileType.empty) break;
+      c++;
+      r--;
+    }
+    // - +
+    c = model.columnPos - 1;
+    r = model.rowPos + 1;
+    while (c >= 0 &&
+        r < 8 &&
+        (tiles[c][r].type.index >= 7 || tiles[c][r].type == TileType.empty)) {
+      tiles[c][r].isAllowedTile = true;
+      if (tiles[c][r].type != TileType.empty) break;
+      c--;
+      r++;
+    }
+    // - -
+    c = model.columnPos - 1;
+    r = model.rowPos - 1;
+    while (c >= 0 &&
+        r >= 0 &&
+        (tiles[c][r].type.index >= 7 || tiles[c][r].type == TileType.empty)) {
+      tiles[c][r].isAllowedTile = true;
+      if (tiles[c][r].type != TileType.empty) break;
+      c--;
+      r--;
+    }
+    // rook part
+    for (int i = model.rowPos + 1; i < 8; i++) {
+      if (tiles[model.columnPos][i].type.index >= 7 ||
+          tiles[model.columnPos][i].type == TileType.empty) {
+        if (i != model.rowPos) tiles[model.columnPos][i].isAllowedTile = true;
+      }
+      if (tiles[model.columnPos][i].type != TileType.empty) {
+        break;
+      }
+    }
+    for (int i = model.columnPos + 1; i < 8; i++) {
+      if (tiles[i][model.rowPos].type.index >= 7 ||
+          tiles[i][model.rowPos].type == TileType.empty) {
+        if (i != model.columnPos) tiles[i][model.rowPos].isAllowedTile = true;
+      }
+      if (tiles[i][model.rowPos].type != TileType.empty) {
+        break;
+      }
+    }
+    for (int i = model.rowPos - 1; i >= 0; i--) {
+      if (tiles[model.columnPos][i].type.index >= 7 ||
+          tiles[model.columnPos][i].type == TileType.empty) {
+        if (i != model.rowPos) tiles[model.columnPos][i].isAllowedTile = true;
+      }
+      if (tiles[model.columnPos][i].type != TileType.empty) {
+        break;
+      }
+    }
+    for (int i = model.columnPos - 1; i >= 0; i--) {
+      if (tiles[i][model.rowPos].type.index >= 7 ||
+          tiles[i][model.rowPos].type == TileType.empty) {
+        if (i != model.columnPos) tiles[i][model.rowPos].isAllowedTile = true;
+      }
+      if (tiles[i][model.rowPos].type != TileType.empty) {
+        break;
+      }
+    }
+  }
+
+  void _blackPwanAllowedLocatons(TileModel model) {
+    if (model.columnPos == 1 &&
+        tiles[model.columnPos + 1][model.rowPos].type == TileType.empty) {
+      tiles[model.columnPos + 1][model.rowPos].isAllowedTile = true;
+      if (tiles[model.columnPos + 2][model.rowPos].type == TileType.empty) {
+        tiles[model.columnPos + 2][model.rowPos].isAllowedTile = true;
+      }
+      if (model.rowPos != 7 &&
+          tiles[model.columnPos + 1][model.rowPos + 1].type.index < 7 &&
+          tiles[model.columnPos + 1][model.rowPos + 1].type != TileType.empty) {
+        tiles[model.columnPos + 1][model.rowPos + 1].isAllowedTile = true;
+      }
+      if (model.rowPos != 0 &&
+          tiles[model.columnPos + 1][model.rowPos - 1].type.index < 7 &&
+          tiles[model.columnPos + 1][model.rowPos - 1].type != TileType.empty) {
+        tiles[model.columnPos + 1][model.rowPos - 1].isAllowedTile = true;
+      }
+    }
+    if (model.columnPos != 7) {
+      if (tiles[model.columnPos + 1][model.rowPos].type == TileType.empty) {
+        tiles[model.columnPos + 1][model.rowPos].isAllowedTile = true;
+      }
+      if (model.rowPos != 7 &&
+          tiles[model.columnPos + 1][model.rowPos + 1].type.index < 7 &&
+          tiles[model.columnPos + 1][model.rowPos + 1].type != TileType.empty) {
+        tiles[model.columnPos + 1][model.rowPos + 1].isAllowedTile = true;
+      }
+      if (model.rowPos != 0 &&
+          tiles[model.columnPos + 1][model.rowPos - 1].type.index < 7 &&
+          tiles[model.columnPos + 1][model.rowPos - 1].type != TileType.empty) {
+        tiles[model.columnPos + 1][model.rowPos - 1].isAllowedTile = true;
+      }
+    }
+  }
+
+  void _blackRookAllowedLocatons(TileModel model) {
+    for (int i = model.rowPos + 1; i < 8; i++) {
+      if (tiles[model.columnPos][i].type.index < 7) {
+        if (i != model.rowPos) tiles[model.columnPos][i].isAllowedTile = true;
+      }
+      if (tiles[model.columnPos][i].type != TileType.empty) {
+        break;
+      }
+    }
+    for (int i = model.columnPos + 1; i < 8; i++) {
+      if (tiles[i][model.rowPos].type.index < 7) {
+        if (i != model.columnPos) tiles[i][model.rowPos].isAllowedTile = true;
+      }
+      if (tiles[i][model.rowPos].type != TileType.empty) {
+        break;
+      }
+    }
+    for (int i = model.rowPos - 1; i >= 0; i--) {
+      if (tiles[model.columnPos][i].type.index < 7) {
+        if (i != model.rowPos) tiles[model.columnPos][i].isAllowedTile = true;
+      }
+      if (tiles[model.columnPos][i].type != TileType.empty) {
+        break;
+      }
+    }
+    for (int i = model.columnPos - 1; i >= 0; i--) {
+      if (tiles[i][model.rowPos].type.index < 7) {
+        if (i != model.columnPos) tiles[i][model.rowPos].isAllowedTile = true;
+      }
+      if (tiles[i][model.rowPos].type != TileType.empty) {
+        break;
+      }
+    }
+  }
+
+  void _blackKnightAllowedLocatons(TileModel model) {
+    List<List<int>> rules = [
+      [2, 1],
+      [2, -1],
+      [-2, 1],
+      [-2, -1],
+      [1, 2],
+      [1, -2],
+      [-1, 2],
+      [-1, -2]
+    ];
+    for (List<int> rule in rules) {
+      if (model.columnPos + rule[0] < 8 &&
+          model.columnPos + rule[0] >= 0 &&
+          model.rowPos + rule[1] < 8 &&
+          model.rowPos + rule[1] >= 0 &&
+          tiles[model.columnPos + rule[0]][model.rowPos + rule[1]].type.index <
+              7) {
+        tiles[model.columnPos + rule[0]][model.rowPos + rule[1]].isAllowedTile =
+            true;
+      }
+    }
+  }
+
+  void _blackBishopAllowedLocatons(TileModel model) {
+    int c = model.columnPos + 1;
+    int r = model.rowPos + 1;
+    // + +
+    while (c < 8 && r < 8 && tiles[c][r].type.index < 7) {
+      tiles[c][r].isAllowedTile = true;
+      if (tiles[c][r].type != TileType.empty) break;
+      c++;
+      r++;
+    }
+    // + -
+    c = model.columnPos + 1;
+    r = model.rowPos - 1;
+    while (c < 8 && r >= 0 && tiles[c][r].type.index < 7) {
+      tiles[c][r].isAllowedTile = true;
+      if (tiles[c][r].type != TileType.empty) break;
+      c++;
+      r--;
+    }
+    // - +
+    c = model.columnPos - 1;
+    r = model.rowPos + 1;
+    while (c >= 0 && r < 8 && tiles[c][r].type.index < 7) {
+      tiles[c][r].isAllowedTile = true;
+      if (tiles[c][r].type != TileType.empty) break;
+      c--;
+      r++;
+    }
+    // - -
+    c = model.columnPos - 1;
+    r = model.rowPos - 1;
+    while (c >= 0 && r >= 0 && tiles[c][r].type.index < 7) {
+      tiles[c][r].isAllowedTile = true;
+      if (tiles[c][r].type != TileType.empty) break;
+      c--;
+      r--;
+    }
+  }
+
+  void _blackQueenAllowedLocatons(TileModel model) {
+    // bishop part
+    int c = model.columnPos + 1;
+    int r = model.rowPos + 1;
+    // + +
+    while (c < 8 && r < 8 && tiles[c][r].type.index < 7) {
+      tiles[c][r].isAllowedTile = true;
+      if (tiles[c][r].type != TileType.empty) break;
+      c++;
+      r++;
+    }
+    // + -
+    c = model.columnPos + 1;
+    r = model.rowPos - 1;
+    while (c < 8 && r >= 0 && tiles[c][r].type.index < 7) {
+      tiles[c][r].isAllowedTile = true;
+      if (tiles[c][r].type != TileType.empty) break;
+      c++;
+      r--;
+    }
+    // - +
+    c = model.columnPos - 1;
+    r = model.rowPos + 1;
+    while (c >= 0 && r < 8 && tiles[c][r].type.index < 7) {
+      tiles[c][r].isAllowedTile = true;
+      if (tiles[c][r].type != TileType.empty) break;
+      c--;
+      r++;
+    }
+    // - -
+    c = model.columnPos - 1;
+    r = model.rowPos - 1;
+    while (c >= 0 && r >= 0 && tiles[c][r].type.index < 7) {
+      tiles[c][r].isAllowedTile = true;
+      if (tiles[c][r].type != TileType.empty) break;
+      c--;
+      r--;
+    }
+
+    //rook part
+    for (int i = model.rowPos + 1; i < 8; i++) {
+      if (tiles[model.columnPos][i].type.index < 7) {
+        if (i != model.rowPos) tiles[model.columnPos][i].isAllowedTile = true;
+      }
+      if (tiles[model.columnPos][i].type != TileType.empty) {
+        break;
+      }
+    }
+    for (int i = model.columnPos + 1; i < 8; i++) {
+      if (tiles[i][model.rowPos].type.index < 7) {
+        if (i != model.columnPos) tiles[i][model.rowPos].isAllowedTile = true;
+      }
+      if (tiles[i][model.rowPos].type != TileType.empty) {
+        break;
+      }
+    }
+    for (int i = model.rowPos - 1; i >= 0; i--) {
+      if (tiles[model.columnPos][i].type.index < 7) {
+        if (i != model.rowPos) tiles[model.columnPos][i].isAllowedTile = true;
+      }
+      if (tiles[model.columnPos][i].type != TileType.empty) {
+        break;
+      }
+    }
+    for (int i = model.columnPos - 1; i >= 0; i--) {
+      if (tiles[i][model.rowPos].type.index < 7) {
+        if (i != model.columnPos) tiles[i][model.rowPos].isAllowedTile = true;
+      }
+      if (tiles[i][model.rowPos].type != TileType.empty) {
+        break;
       }
     }
   }

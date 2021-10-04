@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_chess/consents/color_constents.dart';
+import 'package:flutter_chess/model/firebase_controller_model.dart';
+import 'package:flutter_chess/viewModel/bord_controller.dart';
 import 'package:flutter_chess/widgets/board_view.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:provider/provider.dart';
 
 class GamePage extends StatefulWidget {
   const GamePage({Key? key}) : super(key: key);
@@ -23,13 +26,15 @@ class _GamePageState extends State<GamePage> {
     final bordZize = MediaQuery.of(context).size.width - (border * 2);
 
     return Scaffold(
-      //  backgroundColor: HexColor("#303030"),
+      appBar: AppBar(
+        title: Text("Room ID : ${FirebaseControllerModel().roomId}"),
+        backgroundColor: HexColor("#303030"),
+      ),
       body: SafeArea(
           child: Center(
         child: Container(
             height: totalSize,
             width: totalSize,
-            color: HexColor(borderColor),
             padding: const EdgeInsets.all(border),
             child: BoardView(boardSize: bordZize)),
       )),

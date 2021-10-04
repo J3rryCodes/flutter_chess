@@ -8,7 +8,7 @@ class FirebaseControllerModel {
   final DatabaseReference _databaseRef =
       FirebaseDatabase.instance.reference().child("rooms/");
   late DatabaseReference _roomDatabase;
-  late String roomId;
+  String? roomId;
 
   static final FirebaseControllerModel _firebaseControllerModel =
       FirebaseControllerModel._internal();

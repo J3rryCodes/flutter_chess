@@ -14,7 +14,7 @@ class _TestPageState extends State<TestPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: StreamBuilder<Event>(
+        child: StreamBuilder<DatabaseEvent>(
             stream: FirebaseControllerModel().getLastMove(),
             builder: (context, snapshot) {
               return Text(snapshot.data!.snapshot.value.toString());

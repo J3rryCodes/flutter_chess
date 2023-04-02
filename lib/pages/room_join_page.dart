@@ -14,6 +14,7 @@ class RoomJoinPage extends StatefulWidget {
 
 class _RoomJoinPageState extends State<RoomJoinPage> {
   final TextEditingController _roomTxtCtrl = TextEditingController();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -22,71 +23,87 @@ class _RoomJoinPageState extends State<RoomJoinPage> {
         child: Center(
           child: SizedBox(
             width: 340,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                TextField(
-                  controller: _roomTxtCtrl,
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(
-                      borderSide:
-                          BorderSide(color: Theme.of(context).primaryColor),
-                    ),
-                    labelText: 'Room Name',
-                  ),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                ElevatedButton(
-                    onPressed: () {
-                      Provider.of<BordController>(context, listen: false)
-                          .setPlayerType(PlayerType.black);
-                      FirebaseControllerModel().joinRoom(_roomTxtCtrl.text);
-                      _moveToGamePage();
+            child: Form(
+              key: _formKey,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  TextFormField(
+                    validator: (value) {
+                      if (value == null || value.length < 5) {
+                        return 'ENTER 5 LETTERS';
+                      }
+                      return null;
                     },
-                    child: const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 140),
-                      child: Text(
-                        "Join",
-                        textScaleFactor: 1,
+                    controller: _roomTxtCtrl,
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(
+                        borderSide:
+                            BorderSide(color: Theme.of(context).primaryColor),
                       ),
-                    )),
-                Row(
-                  children: const [
-                    Expanded(
-                        child: Divider(
-                      color: Colors.white,
-                    )),
-                    Padding(
-                      padding: EdgeInsets.all(10.0),
-                      child: Text(
-                        "Or",
-                        style: TextStyle(color: Colors.white),
-                      ),
+                      labelText: 'Room Name',
                     ),
-                    Expanded(
-                        child: Divider(
-                      color: Colors.white,
-                    )),
-                  ],
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    Provider.of<BordController>(context, listen: false)
-                        .setPlayerType(PlayerType.white);
-                    FirebaseControllerModel().createRoom();
-
-                    FirebaseControllerModel()
-                        .selectPiese(6, 4, PlayerType.white);
-                    _moveToGamePage();
-                  },
-                  child: const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 133),
-                    child: Text("Create", textScaleFactor: 1),
                   ),
-                ),
-              ],
+                  const SizedBox(height: 10),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      ElevatedButton(
+                          onPressed: () {
+                            if (!_formKey.currentState!.validate()) return;
+                            Provider.of<BordController>(context, listen: false)
+                                .setPlayerType(PlayerType.black);
+                            FirebaseControllerModel()
+                                .enterRoom(_roomTxtCtrl.text);
+                            _moveToGamePage();
+                          },
+                          child: const Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 20),
+                            child: Text(
+                              "Join",
+                              textScaleFactor: 1,
+                            ),
+                          )),
+                      // Row(
+                      //   children: const [
+                      //     Expanded(
+                      //         child: Divider(
+                      //       color: Colors.white,
+                      //     )),
+                      //     Padding(
+                      //       padding: EdgeInsets.all(10.0),
+                      //       child: Text(
+                      //         "Or",
+                      //         style: TextStyle(color: Colors.white),
+                      //       ),
+                      //     ),
+                      //     Expanded(
+                      //         child: Divider(
+                      //       color: Colors.white,
+                      //     )),
+                      //   ],
+                      // ),
+                      ElevatedButton(
+                        onPressed: () {
+                          if (!_formKey.currentState!.validate()) return;
+                          Provider.of<BordController>(context, listen: false)
+                              .setPlayerType(PlayerType.white);
+                          FirebaseControllerModel()
+                              .enterRoom(_roomTxtCtrl.text);
+
+                          FirebaseControllerModel()
+                              .selectPiese(6, 4, PlayerType.white);
+                          _moveToGamePage();
+                        },
+                        child: const Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 20),
+                          child: Text("Create", textScaleFactor: 1),
+                        ),
+                      ),
+                    ],
+                  )
+                ],
+              ),
             ),
           ),
         ),

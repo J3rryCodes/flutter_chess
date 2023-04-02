@@ -19,14 +19,8 @@ class FirebaseControllerModel {
 
   FirebaseControllerModel._internal();
 
-  createRoom() {
-    debugPrint("Room Created");
-    roomId = _getRandomString(6);
-    _roomDatabase = _databaseRef.child("$roomId/");
-  }
-
-  joinRoom(String roomId) {
-    debugPrint("Room Joind");
+  enterRoom(String roomId) {
+    this.roomId = roomId;
     _roomDatabase = _databaseRef.child("$roomId/");
   }
 

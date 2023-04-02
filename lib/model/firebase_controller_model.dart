@@ -6,7 +6,7 @@ import 'package:flutter_chess/viewModel/bord_controller.dart';
 
 class FirebaseControllerModel {
   final DatabaseReference _databaseRef =
-      FirebaseDatabase.instance.reference().child("rooms/");
+      FirebaseDatabase.instance.ref().child("rooms/");
   late DatabaseReference _roomDatabase;
   String? roomId;
 
@@ -35,7 +35,7 @@ class FirebaseControllerModel {
         .set({"x": x, "y": y, "player_type": playerType.index}).asStream();
   }
 
-  Stream<Event>? getLastMove() {
+  Stream<DatabaseEvent>? getLastMove() {
     return _roomDatabase.onValue;
   }
 

@@ -7,7 +7,18 @@ import 'package:provider/provider.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  await Firebase.initializeApp(
+    options: FirebaseOptions(
+        apiKey: "AIzaSyDbtyHoK_qPKQNvLQXGbseKzcf0zyEaSgo",
+        authDomain: "flutterchess-f88fa.firebaseapp.com",
+        databaseURL:
+            "https://flutterchess-f88fa-default-rtdb.asia-southeast1.firebasedatabase.app",
+        projectId: "flutterchess-f88fa",
+        storageBucket: "flutterchess-f88fa.appspot.com",
+        messagingSenderId: "800162467068",
+        appId: "1:800162467068:web:3296c775b1a87b9535db79",
+        measurementId: "G-JTM9MCSBRV"),
+  );
   runApp(const MyApp());
 }
 

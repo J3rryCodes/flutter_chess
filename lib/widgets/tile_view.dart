@@ -44,6 +44,7 @@ class _TileViewState extends State<TileView> {
         ),
         alignment: Alignment.center,
         child: Stack(
+          alignment: Alignment.center,
           children: [
             Align(
               alignment: Alignment.center,

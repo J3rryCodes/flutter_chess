@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_chess/consents/color_constents.dart';
 import 'package:flutter_chess/model/firebase_controller_model.dart';
-import 'package:flutter_chess/viewModel/bord_controller.dart';
 import 'package:flutter_chess/widgets/board_view.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:provider/provider.dart';
 
 class GamePage extends StatefulWidget {
   const GamePage({Key? key}) : super(key: key);
@@ -20,10 +17,13 @@ class _GamePageState extends State<GamePage> {
   Widget build(BuildContext context) {
     final double totalSize =
         MediaQuery.of(context).size.width < MediaQuery.of(context).size.height
-            ? MediaQuery.of(context).size.height
-            : MediaQuery.of(context).size.width;
+            ? MediaQuery.of(context).size.width - 50
+            : MediaQuery.of(context).size.height - 100;
 
-    final bordZize = MediaQuery.of(context).size.width - (border * 2);
+    debugPrint(
+        "Screen ${MediaQuery.of(context).size.width < MediaQuery.of(context).size.height}");
+
+    final bordZize = totalSize - (border * 2);
 
     return Scaffold(
       appBar: AppBar(
